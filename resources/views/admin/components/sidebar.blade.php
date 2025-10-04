@@ -1,61 +1,27 @@
-<aside id="sidebar" class="min-vh-100">
-  <ul class="sidebar-nav">
-    <li class="sidebar-item">
-      <a href="{{ route('admin.permissions.create') }}" class="sidebar-link">
-        <i class="lni lni-user-4"></i> <span>Permissions</span>
-      </a>
-    </li>
-
-    <li class="sidebar-item">
-      <a href="" class="sidebar-link">
-        <i class="lni lni-agenda"></i> <span>Task</span>
-      </a>
-    </li>
-
-    <li class="sidebar-item">
-      <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
-        <i class="lni lni-shield-2-check"></i>
-        <span>Auth</span>
-      </a>
-      <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="sidebar">
-        <li class="sidebar-item"><a href="" class="sidebar-link">Login</a></li>
-        <li class="sidebar-item"><a href="" class="sidebar-link">Register</a></li>
-      </ul>
-    </li>
-
-    <li class="sidebar-item">
-      <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
-        <i class="lni lni-layout-9"></i>
-        <span>Multi Level</span>
-      </a>
-      <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="sidebar">
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
-            Two Links
-          </a>
-          <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
-            <li class="sidebar-item"><a href="#" class="sidebar-link">Link</a></li>
-            <li class="sidebar-item"><a href="#" class="sidebar-link">Link</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-
-    <li class="sidebar-item">
-      <a href="#" class="sidebar-link">
-        <i class="lni lni-bell-1"></i> <span>Notification</span>
-      </a>
-    </li>
-
-    <li class="sidebar-item">
-      <a href="#" class="sidebar-link">
-        <i class="lni lni-bell-1"></i> <span>Setting</span>
-      </a>
-    </li>
-  </ul>
-  <div class="sidebar-footer d-flex justify-content-center">
-    <button class="sidebar-link border-0 bg-transparent w-100 text-start">
-      <i class="lni lni-exit"></i> <span>Logout</span>
-    </button>
-  </div>
-</aside>
+<!-- Main Sidebar Container -->
+			<aside class="main-sidebar sidebar-dark-primary elevation-4">
+				<!-- Brand Logo -->
+				<a href="#" class="brand-link">
+					<img src="{{ asset('assets/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+					<span class="brand-text font-weight-light text-light">SOP BAZAAR</span>
+				</a>
+				<!-- Sidebar -->
+				<div class="sidebar">
+					<!-- Sidebar user (optional) -->
+					<nav class="mt-2">
+						<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+							<!-- Add icons to the links using the .nav-icon class
+								with font-awesome or any other icon font library -->
+							<li class="nav-item">
+								<a href="{{ route('admin.permissions.index') }}" class="nav-link">
+									<i class="nav-icon fas fa-tachometer-alt"></i>
+									<p>Profiles</p>
+								</a>																
+							</li>
+														
+						</ul>
+					</nav>
+					<!-- /.sidebar-menu -->
+				</div>
+				<!-- /.sidebar -->
+         	</aside>

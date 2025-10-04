@@ -1,43 +1,140 @@
 @extends('admin.layout')
 
-@section('title', 'Create Permissions')
+@section('title', 'Permissions')
 
 @section('content')
-    <div class="">
-        <section style="background-color: #eee;">
-            <div class="container py-5">
-                <div class="row">
-                    @include('admin.components.message')
-                    <div class="col">
-                        <div class="container d-flex ">
-                            <div class="card shadow-sm border-0" style="max-width: 400px; width: 100%;">
-                                <div class="card-body p-4">
-                                    <h4 class=" mb-4">Create Permission</h4>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid my-2">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Create Permission</h1>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <a href="{{ route('admin.permissions.index') }}" class="btn btn-primary">Back</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                                    <form action="{{ route('admin.permissions.store') }}" method="POST">
-                                        @csrf <div class="mb-3">
-                                            <label for="permissionName" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="permissionName" name="name"
-                                                placeholder="Enter permission name" required>
-                                            @error('name')
-                                                <p class="text-danger font-medium">{{ $message }}</p>
-                                            @enderror
-                                        </div>
+    <!-- Main content -->
+    <section class="content">
+        <form id="messageForm" action="{{ route('admin.permissions.store') }}" method="post">
+            @csrf
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
 
-                                        <div class="d-grid">
-                                            <button type="submit" class="btn btn-success">
-                                                Create
-                                            </button>
-                                        </div>
-                                    </form>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="name">Name</label>
+                                    <input type="text" name="name" id="name"
+                                         onchange="generate_slug()"  class="form-control" placeholder="Name">
                                 </div>
                             </div>
-                        </div>
 
-                    </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="slug">Slug</label>
+                                    <input type="text" name="slug" id="slug"
+                                         readonly  class="form-control" placeholder="Slug">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="is_active">Status</label>
+                                    <select name="is_active" id="is_active" class="form-control">
+                                        <option value="1">Active</option>
+                                        <option value="0">Deactivate</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div> <!-- /.row -->
+                    </div> <!-- /.card-body -->
+                </div> <!-- /.card -->
+
+                <div class="pb-5 pt-3">
+                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Create</button>
+                    <a href="{{ route('admin.permissions.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
-
-            </div>
-        </section>
-    </div>
+            </div> <!-- /.container-fluid -->
+        </form>
+    </section>
 @endsection
+
+@push('scripts')
+<script>
+
+   function generate_slug() {
+  let name = $('#name').val();
+  let result = name.trim().replace(/\s+/g, '_'); 
+  $('#slug').val(result);
+ }
+
+$(function () {
+  const $form = $('#messageForm');
+  const $btn  = $('#permSaveBtn');
+
+  $form.on('submit', function(e){
+    e.preventDefault();
+
+    $form.find('.is-invalid').removeClass('is-invalid');
+    $form.find('.invalid-feedback').remove();
+
+    const url  = $form.attr('action');
+    const data = $form.serialize();
+
+    $btn.prop('disabled', true).text('Saving…');
+
+    $.ajax({
+      url: url,
+      method: 'POST',
+      data: data,                 // form-encoded (Laravel-friendly)
+      dataType: 'json',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        'Accept': 'application/json'  // ask Laravel for JSON on validation errors
+      }
+    })
+    .done(function(res){
+      if (typeof showPopup === 'function') {
+        showPopup(res.message || 'Permission saved successfully!', 'success', 3000);
+      }
+      // reset and redirect (change to what you want)
+      $form[0].reset();
+      setTimeout(function(){
+        window.location.href = "{{ route('admin.permissions.index') }}";
+      }, 400);
+    })
+    .fail(function(xhr){
+      if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+        const errs = xhr.responseJSON.errors;
+        Object.keys(errs).forEach(function(field){
+          const $input = $form.find('[name="'+ field +'"]');
+          if ($input.length) {
+            $input.addClass('is-invalid');
+            const fb = $('<div class="invalid-feedback"></div>').text(errs[field][0]);
+            if ($input.next('.invalid-feedback').length === 0) {
+              $input.after(fb);
+            }
+          }
+        });
+        if (typeof showPopup === 'function') {
+          showPopup('Please fix the highlighted errors.', 'warning', 3500);
+        }
+      } else {
+        if (typeof showPopup === 'function') {
+          showPopup('Something went wrong. Please try again.', 'danger', 3500);
+        }
+      }
+    })
+    .always(function(){
+      $btn.prop('disabled', false).text('Create');
+    });
+  });
+});
+</script>
+@endpush

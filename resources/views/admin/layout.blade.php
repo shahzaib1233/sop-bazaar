@@ -2,36 +2,44 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@yield('title', 'SOP BAZAAR')</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('title')</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- Option A: Static files from /public --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
-    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.bootstrap5.css">
-    {{-- Option B (Vite): --}}
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    @stack('styles')
 </head>
 
-<body>
-
-    @include('admin.components.header')
-
+<body class="hold-transition sidebar-mini">
     <div class="wrapper">
+        @include('admin.components.header')
+
         @include('admin.components.sidebar')
 
-        <div class="main p-3">
-            @yield('content')
+        <div class="content-wrapper"> @yield('content')
         </div>
+        @include('admin.components.footer')
     </div>
 
-    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
+
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('assets/js/adminlte.min.js') }}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{{ asset('assets/js/demo.js') }}"></script>
     @stack('scripts')
+
 </body>
 
 </html>

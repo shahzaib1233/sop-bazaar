@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
+.w-4 {
+  width: 1rem;
+}
+.h-4 {
+  height: 1rem;
+}
+
+.w-6 {
+  width: 1.5rem;
+}
+.h-6 {
+  height: 1.5rem;
+}
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+.dropzone {
+  background: white;
+  border-radius: 5px;
+  border: 2px dashed rgb(0, 135, 247);
+  border-image: none;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[class*=sidebar-dark-] {
+    background: #0E223E !important;
+}
+
+
+p{
+  color: white;
+  font-size: 0.9rem;
+}
+
+/* Target all sidebar icons */
+.main-sidebar .nav-icon,
+.main-sidebar .nav-icon svg,
+.main-sidebar .nav-link svg {
+
+  font-size: 15px !important; /* For font-awesome icons */
+  line-height: 15px !important;
+}
+
+
+.btn-theme
+{
+  background-color: #0e223e !important;
+  color: white;
+}
+
+.btn-theme:hover
+{
+  background-color: #0e223e !important;
+  color: white;
+}
+
+.icon-theme
+{
+  color: 0e223e;
+}
+
+/* Make the overlay itself do the blur */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.2);   /* subtle dark tint */
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+
+/* Ensure Bootstrap doesn't dim it further */
+.modal-backdrop.show {
+  opacity: 1;
+}

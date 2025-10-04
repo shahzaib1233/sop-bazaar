@@ -3,108 +3,192 @@
 @section('title', 'Permissions')
 
 @section('content')
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-11">
-
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
-
-          <h5 class="mb-4 fw-semibold">Permissions</h5>
-
-          <div class="table-responsive">
-            <table id="permissionsTable" class="table table-hover align-middle w-100">
-              <thead class="bg-light">
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Guard</th>
-                  <th>Created At</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($permissions as $p)
-                  <tr>
-                    <td>{{ $p->id }}</td>
-                    <td>{{ $p->name }}</td>
-                    <td>{{ $p->guard_name }}</td>
-                    <td>{{ $p->created_at }}</td>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
-
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid my-2">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Permissions</h1>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <a href="{{ route('admin.permissions.create') }}" class="btn btn-theme">New Permissions</a>
+                </div>
+            </div>
         </div>
-      </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        @include('admin.components.message')
+        <!-- Default box -->
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-tools">
+                        <div class="input-group input-group" style="width: 250px;">
+                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
 
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th width="60">ID</th>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th width="100">Status</th>
+                                <th width="100">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($permissions as $permission)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $permission->name }}</td>
+                                    <td>{{ $permission->slug }}</td>
+                                    <td>
+                                        @if ($permission->is_active)
+                                            <svg class="text-success-500 h-6 w-6 icon-theme"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        @else
+                                            <svg class="text-danger h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                </path>
+                                            </svg>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="#">
+                                            <svg class="filament-link-icon w-4 h-4 mr-1 icon-theme" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="" aria-hidden="true">
+                                                <path
+                                                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
+                                                </path>
+                                            </svg>
+                                        </a>
+                                        <a href="#" class="text-danger w-4 h-4 mr-1 btn-delete"
+                                            data-url="{{ route('admin.permissions.delete', $permission->id) }}"
+                                            data-name="{{ $permission->name }}">
+                                            <svg class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            @endforeach
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination m-0 float-right">
+                        <li class="page-item"><a class="page-link" href="#">«</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /.card -->
+    </section>
+    <!-- /.content -->
+<!-- Confirm Delete Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white py-2">
+        <h6 class="modal-title">Delete Permission</h6>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0 text-dark">Are you sure you want to delete <strong id="delItemName"></strong>?</p>
+      </div>
+      <div class="modal-footer py-2">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger btn-sm" id="confirmDeleteBtn">Yes, Delete</button>
+      </div>
     </div>
   </div>
 </div>
+
+
 @endsection
 
-@push('styles')
-  {{-- DataTables + Bootstrap 5 CSS --}}
-  <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 
-  {{-- Google Fonts + Material Icons for a softer UI --}}
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #f8f9fa;
-    }
-    table.dataTable thead th {
-      border-bottom: 2px solid #e9ecef;
-      font-weight: 500;
-    }
-    table.dataTable tbody td {
-      border-color: #f1f3f5;
-    }
-    .dataTables_wrapper .dataTables_filter input {
-      border-radius: 8px;
-      border: 1px solid #dee2e6;
-      padding: 6px 12px;
-      margin-left: .5em;
-    }
-    .dataTables_wrapper .dataTables_length select {
-      border-radius: 8px;
-      border: 1px solid #dee2e6;
-      padding: 4px 10px;
-    }
-  </style>
-@endpush
 
 @push('scripts')
-  {{-- jQuery + DataTables --}}
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script>
+$(function () {
+  let deleteUrl = null;
 
-  <script>
-    $(function () {
-      $('#permissionsTable').DataTable({
-        dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6'f>>" +
-             "tr" +
-             "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
-        paging: true,
-        ordering: true,
-        info: true,
-        pageLength: 10,
-        order: [[0, 'desc']],
-        language: {
-          search: "",
-          searchPlaceholder: "Search permissions...",
-          lengthMenu: "Rows per page: _MENU_",
-          info: "Showing _START_ to _END_ of _TOTAL_ entries",
-          zeroRecords: "No matching records found"
-        }
-      });
+  $(document).on('click', '.btn-delete', function (e) {
+    e.preventDefault();
+    deleteUrl = $(this).data('url');
+    const name = $(this).data('name') || 'this permission';
+    $('#delItemName').text(name);
+    $('#confirmDeleteModal').modal('show');
+  });
 
-      // Apply Bootstrap styles to search & length inputs
-      $('.dataTables_filter input').addClass('form-control form-control-sm');
-      $('.dataTables_length select').addClass('form-select form-select-sm');
+  $('#confirmDeleteBtn').on('click', function () {
+    if (!deleteUrl) return;
+
+    const $btn = $(this);
+    $btn.prop('disabled', true).text('Deleting…');
+
+    $.ajax({
+      url: deleteUrl,
+      method: 'POST',              
+      dataType: 'json',
+      data: {
+        _method: 'DELETE',
+        _token: $('meta[name="csrf-token"]').attr('content')
+      },
+      headers: { 'Accept': 'application/json' }
+    })
+    .done(function (res) {
+      if (typeof showPopup === 'function') {
+        showPopup(res.message || 'Deleted successfully.', 'success', 1200);
+      }
+    })
+    .fail(function (xhr) {
+      if (typeof showPopup === 'function') {
+        showPopup('Delete failed. Reloading…', 'danger', 1500);
+      }
+    })
+    .always(function () {
+      setTimeout(function(){
+        window.location.reload();
+      }, 300);
     });
-  </script>
+  });
+
+  $('#confirmDeleteModal').on('hidden.bs.modal', function () {
+    deleteUrl = null;
+    $('#confirmDeleteBtn').prop('disabled', false).text('Yes, Delete');
+  });
+});
+</script>
 @endpush

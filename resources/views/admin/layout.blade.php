@@ -38,6 +38,8 @@
     <script src="{{ asset('assets/js/adminlte.min.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('assets/js/demo.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('assets/css/MultiSelect.css') }}">
+  <script src="{{ asset('assets/js/MultiSelect.js') }}"></script>
     @stack('scripts')
 
 </body>

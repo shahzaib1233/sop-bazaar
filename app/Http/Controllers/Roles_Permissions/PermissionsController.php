@@ -56,10 +56,46 @@ class PermissionsController extends Controller
     }
 
     // this method shows permissions edit page
-    public function edit() {}
+    public function edit($id) {
+        $permission = Permission::findById($id);
+        return view('admin.dashboard.auth.permissions.edit', compact('permission'));
+    }
 
     // this method shows update permissions
-    public function update() {}
+    public function update(Request $request , $id ) {
+        $permission = Permission::findById($id);
+        if(!$permission)
+        {
+            session()->flash('error', 'Permissions Not Found');
+            return response()->json(['error' , 'Permissions Not Found']);
+        }
+
+        $validator = Validator::make(request()->all(), [
+            'name' => 'required|string|min:3|unique:permissions,name,' .$permission->id,
+            'slug' => 'required|string|min:3|unique:permissions,slug,'.$permission->id,
+            'is_active' => 'nullable|in:0,1',
+        ]);
+
+          if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $data = $validator->validated();
+        $data['is_active'] = isset($data['is_active']) ? (int) $data['is_active'] : 1;
+        $permission = $permission->update($data);
+        session()->flash('success', 'Permission Updated successfully');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Permission Updated successfully.',
+        ], 201);
+
+
+    }
 
     // this method delete permission from db
     public function destroy(Request $request,$id) {

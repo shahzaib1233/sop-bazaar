@@ -72,7 +72,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="#">
+                                        <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="text-primary w-4 h-4 mr-1">
                                             <svg class="filament-link-icon w-4 h-4 mr-1 icon-theme" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 20 20" fill="" aria-hidden="true">
                                                 <path

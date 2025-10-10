@@ -8,7 +8,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Permission</h1>
+                    <h1>Edit Permission</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('admin.permissions.index') }}" class="btn btn-primary">Back</a>
@@ -19,8 +19,9 @@
 
     <!-- Main content -->
     <section class="content">
-        <form id="messageForm" action="{{ route('admin.permissions.store') }}" method="post">
+        <form id="messageForm" action="{{ route('admin.permissions.update', $permission->id) }}" method="post">
             @csrf
+            @method('PATCH')
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body">
@@ -30,14 +31,14 @@
                                 <div class="mb-3">
                                     <label for="name">Name</label>
                                     <input type="text" name="name" id="name"
-                                         onchange="generate_slug()"  class="form-control" placeholder="Name">
+                                         onchange="generate_slug()" value="{{ old('name', $permission->name) }}"  class="form-control" placeholder="Name">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="slug">Slug</label>
-                                    <input type="text" name="slug" id="slug"
+                                    <input type="text" name="slug" value="{{ old('slug', $permission->slug) }}" id="slug"
                                          readonly  class="form-control" placeholder="Slug">
                                 </div>
                             </div>
@@ -57,7 +58,7 @@
                 </div> <!-- /.card -->
 
                 <div class="pb-5 pt-3">
-                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Create</button>
+                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Update</button>
                     <a href="{{ route('admin.permissions.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </div> <!-- /.container-fluid -->
@@ -91,7 +92,7 @@ $(function () {
 
     $.ajax({
       url: url,
-      method: 'POST',
+      method: 'patch',
       data: data,               
       dataType: 'json',
       headers: {
@@ -101,7 +102,7 @@ $(function () {
     })
     .done(function(res){
       if (typeof showPopup === 'function') {
-        showPopup(res.message || 'Permission saved successfully!', 'success', 3000);
+        showPopup(res.message || 'Permission Updated successfully!', 'success', 3000);
       }
       $form[0].reset();
       setTimeout(function(){

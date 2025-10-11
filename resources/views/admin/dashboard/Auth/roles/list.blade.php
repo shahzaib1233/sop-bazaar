@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Permissions')
+@section('title', 'Roles')
 
 @section('content')
     <!-- Content Header (Page header) -->
@@ -8,10 +8,10 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Permissions</h1>
+                    <h1>Roles</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="{{ route('admin.permissions.create') }}" class="btn btn-theme">New Permissions</a>
+                    <a href="{{ route('admin.roles.create') }}" class="btn btn-theme">Add New Role</a>
                 </div>
             </div>
         </div>
@@ -42,19 +42,21 @@
                             <tr>
                                 <th width="60">ID</th>
                                 <th>Name</th>
-                                <th>Slug</th>
+                                <th>Permission</th>
+                                <th>Created At</th>
                                 <th width="100">Status</th>
                                 <th width="100">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($permissions as $permission)
+                            @foreach ($roles as $role)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $permission->name }}</td>
-                                    <td>{{ $permission->slug }}</td>
+                                    <td>{{ $role->name }}</td>
+                                    <td>{{ $role->permissions->pluck('name')->join(', ') }}</td>
+                                    <td>{{ $role->created_at->format('d M Y')  }}</td>
                                     <td>
-                                        @if ($permission->is_active)
+                                        @if ($role->is_active)
                                             <svg class="text-success-500 h-6 w-6 icon-theme"
                                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="2" stroke="currentColor" aria-hidden="true">
@@ -72,7 +74,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="text-primary w-4 h-4 mr-1">
+                                        <a href="{{ route('admin.roles.edit', $role->id) }}" class="text-primary w-4 h-4 mr-1">
                                             <svg class="filament-link-icon w-4 h-4 mr-1 icon-theme" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 20 20" fill="" aria-hidden="true">
                                                 <path
@@ -81,8 +83,8 @@
                                             </svg>
                                         </a>
                                         <a href="#" class="text-danger w-4 h-4 mr-1 btn-delete"
-                                            data-url="{{ route('admin.permissions.delete', $permission->id) }}"
-                                            data-name="{{ $permission->name }}">
+                                            data-url="{{ route('admin.roles.delete', $role->id) }}"
+                                            data-name="{{ $role->name }}">
                                             <svg class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                 <path fill-rule="evenodd"
@@ -101,12 +103,13 @@
                 </div>
                 <div class="card-footer clearfix">
                     <ul class="pagination pagination m-0 float-right">
-                        {{-- <li class="page-item"><a class="page-link" href="#"></a></li>
+                        {{-- <li class="page-item"><a class="page-link" href="#">«</a></li>
                         <li class="page-item"><a class="page-link" href="#">1</a></li>
                         <li class="page-item"><a class="page-link" href="#">2</a></li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
                         <li class="page-item"><a class="page-link" href="#">»</a></li> --}}
-                            {{ $permissions->links() }}
+
+                            {{ $roles->links() }}
 
                     </ul>
                 </div>

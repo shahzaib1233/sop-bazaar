@@ -5,17 +5,16 @@ namespace App\Http\Controllers\Roles_Permissions;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\Models\Permission;
 
 class PermissionsController extends Controller
 {
     // this method shows permissions page
-    // app/Http/Controllers/Admin/PermissionController.php
     public function index()
     {
         $permissions = Permission::select('id', 'name', 'slug', 'is_active', 'guard_name', 'created_at')
-            ->orderByDesc('id')
-            ->get();
+            ->orderByDesc('id')->paginate(10);
 
         return view('admin.dashboard.auth.permissions.list', compact('permissions'));
     }
@@ -56,10 +55,28 @@ class PermissionsController extends Controller
     }
 
     // this method shows permissions edit page
-    public function edit($id) {
-        $permission = Permission::findById($id);
-        return view('admin.dashboard.auth.permissions.edit', compact('permission'));
+    // public function edit($id) {
+    //     $permission = Permission::findById($id);
+    //     if(!$permission)
+    //     {
+    //         session()->flash('error', 'Permissions Not Found');
+    //         return redirect()->route('admin.permissions.index');
+    //     }
+    //     return view('admin.dashboard.auth.permissions.edit', compact('permission'));
+    // }
+
+    public function edit($id)
+{
+    try {
+        $permission = Permission::findById($id, 'web');
+    } catch (PermissionDoesNotExist $e) {
+        session()->flash('error', 'Permission not found.');
+        return redirect()->route('admin.permissions.index');
     }
+
+    return view('admin.dashboard.auth.permissions.edit', compact('permission'));
+}
+
 
     // this method shows update permissions
     public function update(Request $request , $id ) {

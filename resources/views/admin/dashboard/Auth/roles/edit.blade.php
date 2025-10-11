@@ -8,7 +8,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Roles</h1>
+                    <h1>Edit Roles</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('admin.roles.index') }}" class="btn btn-primary">Back</a>
@@ -19,7 +19,7 @@
 
     <!-- Main content -->
     <section class="content">
-        <form id="messageForm" action="{{ route('admin.roles.store') }}" method="post">
+        <form id="messageForm" action="{{ route('admin.roles.update', $role->id) }}" method="post">
             @csrf
             <div class="container-fluid">
                 <div class="card">
@@ -29,7 +29,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" name="name" id="name" onchange="generate_slug()"
+                                    <input type="text" value="{{ old('name', $role->name) }}" name="name" id="name" onchange="generate_slug()"
                                         class="form-control" placeholder="Name">
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="slug">Slug</label>
-                                    <input type="text" name="slug" id="slug" readonly class="form-control"
+                                    <input type="text"  value="{{ old('slug', $role->slug) }}" name="slug" id="slug" readonly class="form-control"
                                         placeholder="Slug">
                                 </div>
                             </div>
@@ -46,8 +46,8 @@
                                 <div class="mb-3">
                                     <label for="is_active">Status</label>
                                     <select name="is_active" id="is_active" class="form-control">
-                                        <option value="1">Active</option>
-                                        <option value="0">Deactivate</option>
+                                        <option value="1" {{ $role->is_active ? 'selected' : '' }}>Active</option>
+                                        <option value="0" {{ !$role->is_active ? 'selected' : '' }} >Deactivate</option>
                                     </select>
                                 </div>
                             </div>
@@ -55,16 +55,6 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="permissions" class="form-label">Permissions</label>
-                                    {{-- <select class="js-example-basic-multiple form-control" name="permissions[]"
-                                        multiple="multiple">
-                                        @if ($permissions && $permissions->count() == 0)
-                                            <option value="">No Permissions Found</option>
-                                        @else
-                                            @foreach ($permissions as $permission)
-                                                <option value="{{ $permission->slug }}">{{ $permission->name }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select> --}}
 
                                     <select id="permissions" name="permissions" data-placeholder="Select Permissions" multiple
                                         data-multi-select>
@@ -72,7 +62,7 @@
                                             <option value="">No Permissions Found</option>
                                         @else
                                             @foreach ($permissions as $permission)
-                                                <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                                                <option value="{{ old('permissions', $permission->id) }}" {{ in_array($permission->id, $rolePermissions) ? 'selected' : '' }}>{{ $permission->name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -84,7 +74,7 @@
                 </div> 
 
                 <div class="pb-5 pt-3">
-                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Create</button>
+                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Update</button>
                     <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </div> <!-- /.container-fluid -->
@@ -94,18 +84,6 @@
 
 @push('scripts')
     <script>
-        $('#permissions').on('change', function (e) {
-    const MAX_SELECTION = 100;
-    const selected = $(this).val() || [];
-
-    if (selected.length > MAX_SELECTION) {
-        alert(`You can select a maximum of ${MAX_SELECTION} permissions only.`);
-        // Remove the last selected item
-        selected.pop();
-        $(this).val(selected).trigger('change.select2');
-    }
-});
-
         // new MultiSelect('#dynamic', {
         //     data: [{
         //             value: 'opt1',
@@ -164,11 +142,11 @@
                 const url = $form.attr('action');
                 const data = $form.serialize();
 
-                $btn.prop('disabled', true).text('Saving…');
+                $btn.prop('disabled', true).text('Updating…');
 
                 $.ajax({
                         url: url,
-                        method: 'POST',
+                        method: 'patch',
                         data: data,
                         dataType: 'json',
                         headers: {
@@ -178,7 +156,7 @@
                     })
                     .done(function(res) {
                         if (typeof showPopup === 'function') {
-                            showPopup(res.message || 'Permission saved successfully!', 'success', 3000);
+                            showPopup(res.message || 'Permission Updated successfully!', 'success', 3000);
                         }
                         $form[0].reset();
                         setTimeout(function() {

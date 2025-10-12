@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['prefix' => 'admin'], function () {
 
-        // Route::get('/dashboard', [AdminController::class, 'Dashboard'])->name('admin.dashboard');
+        Route::get('/dashboard', [AdminController::class, 'Dashboard'])->name('admin.dashboard');
         // Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
         // Route::get('/permissions/create', [PermissionsController::class, 'create'])->name('admin.permissions.create');
         // Route::post('/permissions/store', [PermissionsController::class, 'store'])->name('admin.permissions.store');
@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
             // Route::post('/store', [UserController::class, 'store'])->name('admin.users.store');
             // Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('admin.users.delete');
             // Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('admin.roles.edit');
-            // Route::patch('/update/{id}', [RoleController::class, 'update'])->name('admin.roles.update');
+            Route::patch('/update/{id}', [UserController::class, 'update'])->name('admin.users.update');
         });
     });
 

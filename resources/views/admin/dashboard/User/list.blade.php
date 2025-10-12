@@ -11,7 +11,7 @@
                     <h1>Users</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="{{ route('admin.permissions.create') }}" class="btn btn-theme">New Permissions</a>
+                    {{-- <a href="{{ route('admin.permissions.create') }}" class="btn btn-theme">New Permissions</a> --}}
                 </div>
             </div>
         </div>
@@ -43,6 +43,7 @@
                                 <th width="60">ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Roles</th>
                                 <th >Registered At</th>
                                 <th >Status</th>
                                 <th >Action</th>
@@ -54,6 +55,12 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>
+                                        @foreach ($user->roles as $role)
+                                            <span
+                                                class="badge badge-info" style="background-color: #0e223e;">{{ $role->name }}</span>
+                                        @endforeach
+                                    </td>
                                     <td>{{ $user->created_at->format('d M Y') }}</td>
                                     <td>
                                         @if ($user->is_active)

@@ -8,10 +8,10 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Edit Roles</h1>
+                    <h1>Edit Users</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="{{ route('admin.roles.index') }}" class="btn btn-primary">Back</a>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-primary">Back</a>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
 
     <!-- Main content -->
     <section class="content">
-        <form id="messageForm" action="{{ route('admin.roles.update', $users->id) }}" method="post">
+        <form id="messageForm" action="{{ route('admin.users.update', $users->id) }}" method="post">
             @csrf
             <div class="container-fluid">
                 <div class="card">
@@ -29,16 +29,16 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" value="{{ old('name', $users->name) }}" name="name" id="name" onchange="generate_slug()"
-                                        class="form-control" placeholder="Name">
+                                    <input type="text" value="{{ old('name', $users->name) }}" name="name"
+                                        id="name" onchange="generate_slug()" class="form-control" placeholder="Name">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="slug">Email</label>
-                                    <input type="text"  value="{{ old('email', $users->email) }}" name="email" id="email" class="form-control"
-                                        placeholder="Slug">
+                                    <input type="text" value="{{ old('email', $users->email) }}" name="email"
+                                        id="email" class="form-control" placeholder="Slug">
                                 </div>
                             </div>
 
@@ -47,42 +47,40 @@
                                     <label for="is_active">Status</label>
                                     <select name="is_active" id="is_active" class="form-control">
                                         <option value="1" {{ $users->is_active ? 'selected' : '' }}>Active</option>
-                                        <option value="0" {{ !$users->is_active ? 'selected' : '' }} >Deactivate</option>
+                                        <option value="0" {{ !$users->is_active ? 'selected' : '' }}>Deactivate
+                                        </option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="permissions" class="form-label">Permissions</label>
+                                    <label for="role" class="form-label">Role</label>
 
-                                    <select id="permissions" name="permissions" data-placeholder="Select Permissions" multiple
-                                        data-multi-select>
-                                        {{-- @if ($permissions && $permissions->count() == 0)
-                                            <option value="">No Permissions Found</option>
-                                        @else
-                                            @foreach ($permissions as $permission)
-                                                <option value="{{ $permission->id }}" {{ in_array($permission->id, $usersPermissions) ? 'selected' : '' }}>{{ $permission->name }}</option>
-                                            @endforeach
-                                        @endif --}}
-                                         @if ($roles && $roles->count() == 0)
+                                    <select id="role" name="role[]" class="form-control"
+                                        data-placeholder="Select Roles" multiple data-multi-select>
+                                        @if ($roles->count() == 0)
                                             <option value="">No Roles Found</option>
                                         @else
                                             @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}" >{{ $role->name }}</option>
+                                                <option value="{{ $role->id }}"
+                                                    {{ $users->roles->contains('id', $role->id) ? 'selected' : '' }}>
+                                                    {{ $role->name }}
+                                                </option>
                                             @endforeach
                                         @endif
                                     </select>
+
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                </div> 
+                </div>
 
                 <div class="pb-5 pt-3">
                     <button class="btn btn-primary" id="permSaveBtn" type="submit">Update</button>
-                    <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </div> <!-- /.container-fluid -->
         </form>
@@ -158,34 +156,58 @@
                     })
                     .done(function(res) {
                         if (typeof showPopup === 'function') {
-                            showPopup(res.message || 'Permission Updated successfully!', 'success', 3000);
+                            showPopup(res.message || 'Permission Updated successfully!', 'success',
+                                3000);
                         }
                         $form[0].reset();
                         setTimeout(function() {
-                            window.location.href = "{{ route('admin.roles.index') }}";
+                            window.location.href = "{{ route('admin.users.index') }}";
                         }, 400);
                     })
                     .fail(function(xhr) {
-                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                            const errs = xhr.responseJSON.errors;
-                            Object.keys(errs).forEach(function(field) {
-                                const $input = $form.find('[name="' + field + '"]');
+                        $btn.prop('disabled', false).text('Update');
+
+                        const response = xhr.responseJSON || {};
+
+                        // Clear old errors
+                        $form.find('.is-invalid').removeClass('is-invalid');
+                        $form.find('.invalid-feedback').remove();
+                        $('#general-error').remove();
+
+                        // Case 1: Laravel validation-style field errors
+                        if (xhr.status === 422 && response.errors && typeof response.errors ===
+                            'object') {
+                            Object.keys(response.errors).forEach(function(field) {
+                                const $input = $form.find(`[name="${field}"]`);
                                 if ($input.length) {
                                     $input.addClass('is-invalid');
-                                    const fb = $('<div class="invalid-feedback"></div>').text(
-                                        errs[field][0]);
-                                    if ($input.next('.invalid-feedback').length === 0) {
-                                        $input.after(fb);
-                                    }
+                                    $('<div class="invalid-feedback d-block"></div>')
+                                        .text(response.errors[field][0])
+                                        .insertAfter($input);
                                 }
                             });
-                            if (typeof showPopup === 'function') {
-                                showPopup('Please fix the highlighted errors.', 'warning', 3500);
-                            }
-                        } else {
-                            if (typeof showPopup === 'function') {
-                                showPopup('Something went wrong. Please try again.', 'danger', 3500);
-                            }
+                        }
+
+
+                        // Case 2: General single error message like "Role Not Found"
+                        else if (response.errors && typeof response.errors === 'string') {
+                            // Insert it at the top of the card body, full width, not inside row
+                            const $alert = $(`
+            <div id="general-error" class="alert alert-danger py-2 px-3 mb-3" style="font-weight:500;">
+                ${response.errors}
+            </div>
+        `);
+                            $form.find('.card-body').prepend($alert);
+                        }
+
+                        // Case 3: Unknown error fallback
+                        else {
+                            const $alert = $(`
+            <div id="general-error" class="alert alert-danger py-2 px-3 mb-3" style="font-weight:500;">
+                Something went wrong. Please try again.
+            </div>
+        `);
+                            $form.find('.card-body').prepend($alert);
                         }
                     })
                     .always(function() {

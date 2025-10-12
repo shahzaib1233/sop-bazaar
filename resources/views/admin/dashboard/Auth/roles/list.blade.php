@@ -74,6 +74,7 @@
                                         @endif
                                     </td>
                                     <td>
+                                      @can('Edit Roles')
                                         <a href="{{ route('admin.roles.edit', $role->id) }}" class="text-primary w-4 h-4 mr-1">
                                             <svg class="filament-link-icon w-4 h-4 mr-1 icon-theme" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 20 20" fill="" aria-hidden="true">
@@ -82,6 +83,8 @@
                                                 </path>
                                             </svg>
                                         </a>
+                                            @endcan
+                                            @can('Delete Roles')
                                         <a href="#" class="text-danger w-4 h-4 mr-1 btn-delete"
                                             data-url="{{ route('admin.roles.delete', $role->id) }}"
                                             data-name="{{ $role->name }}">
@@ -92,7 +95,7 @@
                                                     clip-rule="evenodd"></path>
                                             </svg>
                                         </a>
-
+                                            @endcan
                                     </td>
                                 </tr>
                             @endforeach

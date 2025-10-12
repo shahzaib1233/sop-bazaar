@@ -7,9 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\Models\Permission;
-
-class PermissionsController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+class PermissionsController extends Controller implements HasMiddleware
 {
+
+    //this function only apply middlewares
+    public static function middleware(): array
+{
+    return [
+        new Middleware('permission:View Permissions', only: ['index']),
+        new Middleware('permission:Edit Permissions', only: ['edit']),
+        new Middleware('permission:Create Permissions', only: ['create']),
+        new Middleware('permission:Delete Permissions', only: ['destroy']),
+    ];
+}
+
     // this method shows permissions page
     public function index()
     {

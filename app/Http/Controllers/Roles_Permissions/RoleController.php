@@ -7,9 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
-class RoleController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+class RoleController extends Controller implements HasMiddleware
 {
+
+    //this function only apply middlewares
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:View Roles', only: ['index']),
+            new Middleware('permission:Edit Roles', only: ['edit']),
+            new Middleware('permission:Create Roles', only: ['create']),
+            new Middleware('permission:Delete Roles', only: ['destroy']),
+        ];
+    }
+
     // this method will show role page
     public function index()
     {

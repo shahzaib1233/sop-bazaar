@@ -47,8 +47,8 @@
                                 <div class="mb-3">
                                     <label for="is_active">Status</label>
                                     <select name="is_active" id="is_active" class="form-control">
-                                        <option value="1">Active</option>
-                                        <option value="0">Deactivate</option>
+                                        <option value="1" {{ $permission->is_active ? 'selected' : '' }}>Active</option>
+                                        <option value="0" {{ !$permission->is_active ? 'selected' : '' }}>Deactivate</option>
                                     </select>
                                 </div>
                             </div>

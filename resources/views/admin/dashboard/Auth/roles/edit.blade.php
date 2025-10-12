@@ -187,7 +187,7 @@
                         }
                     })
                     .always(function() {
-                        $btn.prop('disabled', false).text('Create');
+                        $btn.prop('disabled', false).text('Update');
                     });
             });
         });

@@ -8,7 +8,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Edit Users</h1>
+                    <h1>Create Users</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('admin.users.index') }}" class="btn btn-primary">Back</a>
@@ -19,7 +19,7 @@
 
     <!-- Main content -->
     <section class="content">
-        <form id="messageForm" action="{{ route('admin.users.update', $users->id) }}" method="post">
+        <form id="messageForm" action="{{ route('admin.users.store') }}" autocomplete="off" method="post">
             @csrf
             <div class="container-fluid">
                 <div class="card">
@@ -29,25 +29,42 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" value="{{ old('name', $users->name) }}" name="name"
-                                        id="name" onchange="generate_slug()" class="form-control" placeholder="Name">
+                                    <input type="text" value="{{ old('name') }}" name="name" id="name"
+                                        class="form-control" placeholder="Name">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="slug">Email</label>
-                                    <input type="text" value="{{ old('email', $users->email) }}" name="email"
-                                        id="email" class="form-control" placeholder="Slug">
+                                    <input type="text" autocomplete="off" value="{{ old('email') }}" name="email" id="email"
+                                        class="form-control" placeholder="Slug">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="password">Password</label>
+                                    <input type="password" value="{{ old('password') }}" name="password" id="password"
+                                        class="form-control" placeholder="Password">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="password">Confirm Password</label>
+                                    <input type="password" value="{{ old('password_confirmation') }}" name="password_confirmation"
+                                        id="password_confirmation" class="form-control" placeholder="Confirm Password">
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="is_active">Status</label>
                                     <select name="is_active" id="is_active" class="form-control">
-                                        <option value="1" {{ $users->is_active ? 'selected' : '' }}>Active</option>
-                                        <option value="0" {{ !$users->is_active ? 'selected' : '' }}>Deactivate
+                                        <option value="1">Active</option>
+                                        <option value="0">Deactivate
                                         </option>
                                     </select>
                                 </div>
@@ -63,8 +80,7 @@
                                             <option value="">No Roles Found</option>
                                         @else
                                             @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}"
-                                                    {{ $users->roles->contains('id', $role->id) ? 'selected' : '' }}>
+                                                <option value="{{ $role->id }}">
                                                     {{ $role->name }}
                                                 </option>
                                             @endforeach
@@ -79,7 +95,7 @@
                 </div>
 
                 <div class="pb-5 pt-3">
-                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Update</button>
+                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Create</button>
                     <a href="{{ route('admin.users.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </div> <!-- /.container-fluid -->
@@ -142,11 +158,11 @@
                 const url = $form.attr('action');
                 const data = $form.serialize();
 
-                $btn.prop('disabled', true).text('Updating…');
+                $btn.prop('disabled', true).text('Creating…');
 
                 $.ajax({
                         url: url,
-                        method: 'patch',
+                        method: 'post',
                         data: data,
                         dataType: 'json',
                         headers: {
@@ -156,7 +172,7 @@
                     })
                     .done(function(res) {
                         if (typeof showPopup === 'function') {
-                            showPopup(res.message || 'Permission Updated successfully!', 'success',
+                            showPopup(res.message || 'User Updated successfully!', 'success',
                                 3000);
                         }
                         $form[0].reset();

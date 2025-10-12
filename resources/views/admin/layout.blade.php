@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/dropzone/min/dropzone.min.css') }}">
+
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -38,6 +40,7 @@
     <script src="{{ asset('assets/js/adminlte.min.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('assets/js/demo.js') }}"></script>
+    <script src="{{ asset('assets/plugins/dropzone/min/dropzone.min.js') }}"></script>
   <link rel="stylesheet" href="{{ asset('assets/css/MultiSelect.css') }}">
   <script src="{{ asset('assets/js/MultiSelect.js') }}"></script>
     @stack('scripts')

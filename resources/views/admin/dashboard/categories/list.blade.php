@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Users')
+@section('title', 'Categories')
 
 @section('content')
     <!-- Content Header (Page header) -->
@@ -8,13 +8,11 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Users</h1>
+                    <h1>Categories</h1>
                 </div>
-                @can('Create User')
-                    <div class="col-sm-6 text-right">
-                        <a href="{{ route('admin.users.create') }}" class="btn btn-theme">Create New User</a>
-                    </div>
-                @endcan
+                <div class="col-sm-6 text-right">
+                    <a href="{{ route('admin.categories.create') }}" class="btn btn-theme">Add New Category</a>
+                </div>
             </div>
         </div>
         <!-- /.container-fluid -->
@@ -44,74 +42,72 @@
                             <tr>
                                 <th width="60">ID</th>
                                 <th>Name</th>
-                                <th>Email</th>
-                                <th>Roles</th>
-                                <th>Registered At</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>slug</th>
+                                <th>Created At</th>
+                                <th width="100">Status</th>
+                                <th width="100">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($users as $user)
+                            @if ($categories->isEmpty())
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>
-                                        @foreach ($user->roles as $role)
-                                            <span class="badge badge-info"
-                                                style="background-color: #0e223e;">{{ $role->name }}</span><br>
-                                        @endforeach
-                                    </td>
-
-                                    <td>{{ $user->created_at->format('d M Y') }}</td>
-                                    <td>
-                                        @if ($user->is_active)
-                                            <svg class="text-success-500 h-6 w-6 icon-theme"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="2" stroke="currentColor" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                        @else
-                                            <svg class="text-danger h-6 w-6" xmlns="http://www.w3.org/2000/svg"
-                                                fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
-                                                </path>
-                                            </svg>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @can('Edit Users')
-                                            <a href="{{ route('admin.users.edit', $user->id) }}"
-                                                class="text-primary w-4 h-4 mr-1">
-                                                <svg class="filament-link-icon w-4 h-4 mr-1 icon-theme"
-                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill=""
-                                                    aria-hidden="true">
-                                                    <path
-                                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
+                                    <td colspan="6" class="text-center">No categories found.</td>
+                                </tr>
+                            @else
+                                @foreach ($categories as $category)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $category->name }}</td>
+                                        <td>{{ $category->slug }}</td>
+                                        <td>{{ $category->created_at->format('d M Y') }}</td>
+                                        <td>
+                                            @if ($category->is_active)
+                                                <svg class="text-success-500 h-6 w-6 icon-theme"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            @else
+                                                <svg class="text-danger h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                                    stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
                                                     </path>
                                                 </svg>
-                                            </a>
-                                        @endcan
-                                        @can('Delete Users')
-                                            <a href="#" class="text-danger w-4 h-4 mr-1 btn-delete"
-                                                data-url="{{ route('admin.permissions.delete', $user->id) }}"
-                                                data-name="{{ $user->name }}">
-                                                <svg class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path fill-rule="evenodd"
-                                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                            </a>
-                                        @endcan
-                                    </td>
-                                </tr>
-                            @endforeach
-
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @can('Edit Categories')
+                                                <a href="{{ route('admin.categories.edit' , $category->id) }}"
+                                                    class="text-primary w-4 h-4 mr-1">
+                                                    <svg class="filament-link-icon w-4 h-4 mr-1 icon-theme"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill=""
+                                                        aria-hidden="true">
+                                                        <path
+                                                            d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
+                                                        </path>
+                                                    </svg>
+                                                </a>
+                                            @endcan
+                                            @can('Delete Categories')
+                                                <a href="#" class="text-danger w-4 h-4 mr-1 btn-delete"
+                                                    data-url="{{ route('admin.categories.delete', $category->id) }}"
+                                                    data-name="{{ $category->name }}">
+                                                    <svg class="filament-link-icon w-4 h-4 mr-1"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                        fill="currentColor" aria-hidden="true">
+                                                        <path fill-rule="evenodd"
+                                                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                </a>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
 
                         </tbody>
                     </table>
@@ -123,7 +119,8 @@
                         <li class="page-item"><a class="page-link" href="#">2</a></li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
                         <li class="page-item"><a class="page-link" href="#">»</a></li> --}}
-                        {{ $users->links() }}
+
+                        {{ $categories->links() }}
 
                     </ul>
                 </div>
@@ -137,7 +134,7 @@
         <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white py-2">
-                    <h6 class="modal-title">Delete Permission</h6>
+                    <h6 class="modal-title">Delete Category</h6>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

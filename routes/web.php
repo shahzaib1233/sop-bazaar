@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\admin\Accounts\AccountStatus\AccountStatusesController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\categories\categoriesController;
+use App\Http\Controllers\admin\sub_categories\subCategoriesController;
+use App\Http\Controllers\admin\tempImagesController;
 use App\Http\Controllers\admin\User\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Roles_Permissions\PermissionsController;
@@ -29,8 +32,8 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/permissions/edit/{id}', [PermissionsController::class, 'edit'])->name('admin.permissions.edit');
         // Route::patch('/permissions/update/{id}', [PermissionsController::class, 'update'])->name('admin.permissions.update');
 
-        //permissions routes    
-          Route::group(['prefix' => 'permissions'], function () {
+        // permissions routes
+        Route::group(['prefix' => 'permissions'], function () {
             Route::get('/index', [PermissionsController::class, 'index'])->name('admin.permissions.index');
             Route::get('/create', [PermissionsController::class, 'create'])->name('admin.permissions.create');
             Route::post('/store', [PermissionsController::class, 'store'])->name('admin.permissions.store');
@@ -38,8 +41,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/edit/{id}', [PermissionsController::class, 'edit'])->name('admin.permissions.edit');
             Route::patch('/update/{id}', [PermissionsController::class, 'update'])->name('admin.permissions.update');
         });
-
-
 
         // roles routes
         Route::group(['prefix' => 'roles'], function () {
@@ -51,8 +52,7 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('/update/{id}', [RoleController::class, 'update'])->name('admin.roles.update');
         });
 
-
-          // users routes
+        // users routes
         Route::group(['prefix' => 'users'], function () {
             Route::get('/index', [UserController::class, 'index'])->name('admin.users.index');
             Route::get('/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
@@ -63,7 +63,6 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('/update/{id}', [UserController::class, 'update'])->name('admin.users.update');
         });
 
-
         Route::group(['prefix' => 'categories'], function () {
             Route::get('/index', [CategoriesController::class, 'index'])->name('admin.categories.index');
             Route::get('/create', [CategoriesController::class, 'create'])->name('admin.categories.create');
@@ -72,6 +71,27 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/edit/{id}', [CategoriesController::class, 'edit'])->name('admin.categories.edit');
             Route::patch('/update/{id}', [CategoriesController::class, 'update'])->name('admin.categories.update');
         });
+
+        // temp-images.create
+        Route::post('/upload-temp-image', [tempImagesController::class, 'create'])->name('temp-images.create');
+
+        Route::group(['prefix' => 'sub-categories'], function () {
+            Route::get('/index', [SubCategoriesController::class, 'index'])->name('admin.sub-categories.index');
+            Route::get('/create', [SubCategoriesController::class, 'create'])->name('admin.sub-categories.create');
+            Route::post('/store', [SubCategoriesController::class, 'store'])->name('admin.sub-categories.store');
+            Route::delete('/delete/{id}', [SubCategoriesController::class, 'destroy'])->name('admin.sub-categories.delete');
+            Route::get('/edit/{id}', [SubCategoriesController::class, 'edit'])->name('admin.sub-categories.edit');
+            Route::patch('/update/{id}', [SubCategoriesController::class, 'update'])->name('admin.sub-categories.update');
+        });
+
+
+
+         Route::group(['prefix' => 'status'], function () {
+            Route::get('/index', [AccountStatusesController::class, 'index'])->name('admin.status.index');
+            Route::get('/create', [AccountStatusesController::class, 'create'])->name('admin.status.create');
+        });
+
+
     });
 
 });

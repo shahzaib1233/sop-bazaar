@@ -29,16 +29,16 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" name="name" value="{{ old('name' , $category->name) }}" id="name" onchange="generate_slug()"
-                                        class="form-control" placeholder="Name">
+                                    <input type="text" name="name" value="{{ old('name', $category->name) }}"
+                                        id="name" onchange="generate_slug()" class="form-control" placeholder="Name">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="slug">Slug</label>
-                                    <input type="text"  value="{{ old('slug' , $category->slug) }}" name="slug" id="slug" readonly class="form-control"
-                                        placeholder="Slug">
+                                    <input type="text" value="{{ old('slug', $category->slug) }}" name="slug"
+                                        id="slug" readonly class="form-control" placeholder="Slug">
                                 </div>
                             </div>
 
@@ -46,18 +46,38 @@
                                 <div class="mb-3">
                                     <label for="is_active">Status</label>
                                     <select name="is_active" id="is_active" class="form-control">
-                                        <option value="1" {{ old('is_active', $category->is_active) == 1 ? 'selected' : '' }}>Active</option>
-                                        <option value="0" {{ old('is_active', $category->is_active) == 0 ? 'selected' : '' }}>Deactivate</option>
+                                        <option value="1"
+                                            {{ old('is_active', $category->is_active) == 1 ? 'selected' : '' }}>Active
+                                        </option>
+                                        <option value="0"
+                                            {{ old('is_active', $category->is_active) == 0 ? 'selected' : '' }}>Deactivate
+                                        </option>
                                     </select>
                                 </div>
                             </div>
-
 
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="description">Description</label>
                                     <textarea name="description" id="description" class="form-control" rows="4" placeholder="Description">{{ old('description', $category->description) }}</textarea>
                                 </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <input type="hidden" name="image_id" id="image_id" value="">
+                                    <label for="image">Image</label>
+                                    <div id="image" class="dropzone dz-clickable">
+                                        <div class="dz-message needsclick">
+                                            <br>Drop files here or click to upload.<br><br>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if ($category->image)
+                                    <div class="mb-3" id="show-image">
+                                        <img src="{{ asset('uploads/categories/thumb/' . $category->image) }}"
+                                            alt="Category Image" style="max-width: 150px; max-height: 150px;">
+                                    </div>
+                                    @endif
                             </div>
 
                         </div> <!-- /.row -->
@@ -91,7 +111,7 @@
                 $btn.prop('disabled', true).text('Updating…');
 
                 $.ajax({
-                    url: "{{ route('admin.categories.update', $category->id ) }}",
+                    url: "{{ route('admin.categories.update', $category->id) }}",
                     method: 'patch',
                     data: $form.serialize(),
                     dataType: 'json',
@@ -146,6 +166,32 @@
                     }
                 });
             });
+        });
+
+
+
+        Dropzone.autoDiscover = false;
+        const dropzone = $("#image").dropzone({
+            init: function() {
+                this.on('addedfile', function(file) {
+                    if (this.files.length > 1) {
+                        this.removeFile(this.files[0]);
+                    }
+                });
+            },
+            url: "{{ route('temp-images.create') }}",
+            maxFiles: 1,
+            paramName: 'image',
+            addRemoveLinks: true,
+            acceptedFiles: "image/jpeg,image/png,image/gif",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(file, response) {
+                $("#image_id").val(response.image_id);
+                $('#show-image').addClass('d-none');
+                //console.log(response)
+            }
         });
     </script>
 @endpush

@@ -23,6 +23,15 @@
                     </li>
                 @endcan
 
+                  @can('View Sub Categories')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.sub-categories.index') }}" class="nav-link">
+                           <i class="nav-icon fas fa-sitemap"></i>
+                            <p>Sub Categories</p>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('View Permissions')
                     <li class="nav-item">
                         <a href="{{ route('admin.permissions.index') }}" class="nav-link">

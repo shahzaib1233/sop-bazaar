@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\admin\Accounts\AccountController;
 use App\Http\Controllers\admin\Accounts\AccountStatus\AccountStatusesController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\categories\categoriesController;
+use App\Http\Controllers\admin\helper\HelperController;
 use App\Http\Controllers\admin\sub_categories\subCategoriesController;
 use App\Http\Controllers\admin\tempImagesController;
 use App\Http\Controllers\admin\User\UserController;
@@ -89,7 +91,25 @@ Route::middleware(['auth'])->group(function () {
          Route::group(['prefix' => 'status'], function () {
             Route::get('/index', [AccountStatusesController::class, 'index'])->name('admin.status.index');
             Route::get('/create', [AccountStatusesController::class, 'create'])->name('admin.status.create');
+            Route::post('/store', [AccountStatusesController::class, 'store'])->name('admin.status.store');
+            Route::get('/edit/{id}', [AccountStatusesController::class, 'edit'])->name('admin.status.edit');
+            Route::patch('/update/{id}', [AccountStatusesController::class, 'update'])->name('admin.status.update');
+            Route::delete('/delete/{id}', [AccountStatusesController::class, 'destroy'])->name('admin.status.delete');
         });
+
+
+
+
+        Route::group(['prefix' => 'accounts'], function () {
+            Route::get('/create', [AccountController::class, 'create'])->name('admin.accounts.create');
+            Route::post('/store', [AccountController::class, 'store'])->name('admin.accounts.store');
+            Route::get('/index', [AccountController::class, 'index'])->name('admin.accounts.index');
+            Route::delete('/delete/{id}', [AccountController::class, 'destroy'])->name('admin.accounts.delete');
+            Route::get('/edit/{id}', [AccountController::class, 'edit'])->name('admin.accounts.edit');
+            Route::patch('/update/{id}', [AccountController::class, 'update'])->name('admin.accounts.update');
+            
+        });
+        Route::get('/get-sub-categories/{category_id}', [HelperController::class, 'getSubCategoriesByCategoryId'])->name('admin.accounts.get-sub-categories');
 
 
     });

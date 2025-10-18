@@ -16,14 +16,14 @@ class categoriesController extends Controller implements HasMiddleware
 {
 
      public static function middleware(): array
-{
-    return [
-        new Middleware('permission:View Categories', only: ['index']),
-        new Middleware('permission:Edit Categories', only: ['edit']),
-        new Middleware('permission:Create Categories', only: ['create']),
-        new Middleware('permission:Delete Categories', only: ['destroy']),
-    ];
-}
+    {
+        return [
+            new Middleware('permission:View Categories', only: ['index']),
+            new Middleware('permission:Edit Categories', only: ['edit']),
+            new Middleware('permission:Create Categories', only: ['create']),
+            new Middleware('permission:Delete Categories', only: ['destroy']),
+        ];
+    }
 
     // this function will return the list of categories
     public function index()

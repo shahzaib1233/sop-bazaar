@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Status - Create')
+@section('title', 'Status - Edit')
 
 @section('content')
     <!-- Content Header (Page header) -->
@@ -8,7 +8,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Status</h1>
+                    <h1>Edit Status</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('admin.status.index') }}" class="btn btn-primary">Back</a>
@@ -29,7 +29,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" name="name" id="name" onchange="generate_slug()"
+                                    <input type="text" name="name" value="{{ $accountStatus->name }}" id="name" onchange="generate_slug()"
                                         class="form-control" placeholder="Name">
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="slug">Slug</label>
-                                    <input type="text" name="slug" id="slug" readonly class="form-control"
+                                    <input type="text" name="slug" value="{{ $accountStatus->slug }}" id="slug" readonly class="form-control"
                                         placeholder="Slug">
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="description">Description</label>
-                                    <textarea name="description" id="description" class="form-control" rows="4" placeholder="Description"></textarea>
+                                    <textarea name="description" id="description" class="form-control" rows="4" placeholder="Description">{{ $accountStatus->description }}</textarea>
                                 </div>
                             </div>
 
@@ -56,7 +56,7 @@
                 </div> <!-- /.card -->
 
                 <div class="pb-5 pt-3">
-                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Create</button>
+                    <button class="btn btn-primary" id="permSaveBtn" type="submit">Update</button>
                     <a href="{{ route('admin.status.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </div> <!-- /.container-fluid -->
@@ -79,11 +79,11 @@
 
             $form.on('submit', function(e) {
                 e.preventDefault();
-                $btn.prop('disabled', true).text('Saving…');
+                $btn.prop('disabled', true).text('Updating…');
 
                 $.ajax({
-                    url: "{{ route('admin.status.store') }}",
-                    method: 'POST',
+                    url: "{{ route('admin.status.update', $accountStatus->id) }}",
+                    method: 'patch',
                     data: $form.serialize(),
                     dataType: 'json',
                     headers: {
@@ -133,7 +133,7 @@
                         }
                     },
                     complete: function() {
-                        $btn.prop('disabled', false).text('Create');
+                        $btn.prop('disabled', false).text('Update');
                     }
                 });
             });

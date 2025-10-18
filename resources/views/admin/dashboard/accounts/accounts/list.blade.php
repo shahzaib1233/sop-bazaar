@@ -8,10 +8,10 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Account Statuses</h1>
+                    <h1>Accounts</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="{{ route('admin.status.create') }}" class="btn btn-theme">Add New Account Status</a>
+                    <a href="{{ route('admin.accounts.create') }}" class="btn btn-theme">Add New Account</a>
                 </div>
             </div>
         </div>
@@ -42,26 +42,63 @@
                             <tr>
                                 <th width="60">ID</th>
                                 <th>Name</th>
-                                <th>Slug</th>
-                                <th>Description</th>
+                                <th>Image</th>
+                                <th>Account Owner</th>
+                                <th>Category</th>
+                                <th>Sub Category</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Is Active</th>
                                 <th width="100">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($accountStatuses->isEmpty())
+                            @if ($accounts->isEmpty())
                                 <tr>
                                     <td colspan="6" class="text-center">No Account Status found.</td>
                                 </tr>
                             @else
-                                @foreach ($accountStatuses as $status)
+                                @foreach ($accounts as $account)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $status->name }}</td>
-                                        <td>{{ $status->slug }}</td>
-                                        <td>{{ $status->description }}</td>
+                                        <td>{{ $account->name }}</td>
+                                        <td>
+                                            @if ($account->images->count() > 0)
+                                                <div class="d-flex flex-wrap">
+                                                    <img src="{{ asset('uploads/accounts/thumb/' . $account->images->first()->image) }}"
+                                                        alt="{{ $account->name }}" class="img-thumbnail mr-1 mb-1"
+                                                        style="width: 60px; height: 60px; object-fit: cover;">
+                                                </div>
+                                            @else
+                                                <span class="text-muted">No image</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $account->creator->name }}</td>
+                                        <td>{{ $account->category->name }}</td>
+                                        <td>{{ $account->subcategory->name }}</td>
+                                        <td>{{ $account->price }}</td>
+                                        <td>{{ $account->status->name }}</td>
+                                        <td>
+                                            @if ($account->is_active)
+                                                <svg class="text-success-500 h-6 w-6 icon-theme"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            @else
+                                                <svg class="text-danger h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                                    stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                    </path>
+                                                </svg>
+                                            @endif
+                                        </td>
                                         <td>
                                             @can('Edit Status')
-                                                <a href="{{ route('admin.status.edit' , $status->id) }}"
+                                                <a href="{{ route('admin.accounts.edit', $account->id) }}"
                                                     class="text-primary w-4 h-4 mr-1">
                                                     <svg class="filament-link-icon w-4 h-4 mr-1 icon-theme"
                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill=""
@@ -74,8 +111,8 @@
                                             @endcan
                                             @can('Delete Status')
                                                 <a href="#" class="text-danger w-4 h-4 mr-1 btn-delete"
-                                                    data-url="{{ route('admin.status.delete', $status->id) }}"
-                                                    data-name="{{ $status->name }}">
+                                                    data-url="{{ route('admin.accounts.delete', $account->id) }}"
+                                                    data-name="{{ $account->name }}">
                                                     <svg class="filament-link-icon w-4 h-4 mr-1"
                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                         fill="currentColor" aria-hidden="true">
@@ -101,7 +138,7 @@
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
                         <li class="page-item"><a class="page-link" href="#">»</a></li> --}}
 
-                        {{ $accountStatuses->links() }}
+                        {{ $accounts->links() }}
 
                     </ul>
                 </div>
@@ -115,13 +152,12 @@
         <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white py-2">
-                    <h6 class="modal-title">Delete Status</h6>
+                    <h6 class="modal-title">Delete Account</h6>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p class="mb-0 text-dark">Remember all the account statuses associated with this status will also be deleted.</p>
                     <p class="mb-0 text-dark">Are you sure you want to delete <strong id="delItemName"></strong>?</p>
                 </div>
                 <div class="modal-footer py-2">

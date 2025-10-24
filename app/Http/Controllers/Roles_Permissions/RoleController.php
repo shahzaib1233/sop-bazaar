@@ -28,7 +28,7 @@ class RoleController extends Controller implements HasMiddleware
     {
         $roles = Role::orderBy('id', 'desc')->paginate(10);
 
-        return view('admin.dashboard.auth.roles.list', compact('roles'));
+        return view('admin.dashboard.Auth.roles.list', compact('roles'));
     }
 
     // this method will show create role page
@@ -36,7 +36,7 @@ class RoleController extends Controller implements HasMiddleware
     {
         $permissions = Permission::orderBy('name')->get();
 
-        return view('admin.dashboard.auth.roles.create', compact('permissions'));
+        return view('admin.dashboard.Auth.roles.create', compact('permissions'));
     }
 
     // this method will store role in db
@@ -109,7 +109,7 @@ class RoleController extends Controller implements HasMiddleware
         }
         $permissions = Permission::orderBy('name')->get();
         $rolePermissions = $role->permissions->pluck('id')->toArray();
-        return view('admin.dashboard.auth.roles.edit', compact('role', 'permissions', 'rolePermissions'));
+        return view('admin.dashboard.Auth.roles.edit', compact('role', 'permissions', 'rolePermissions'));
     }
 
 

@@ -29,13 +29,13 @@ class PermissionsController extends Controller implements HasMiddleware
         $permissions = Permission::select('id', 'name', 'slug', 'is_active', 'guard_name', 'created_at')
             ->orderByDesc('id')->paginate(10);
 
-        return view('admin.dashboard.auth.permissions.list', compact('permissions'));
+        return view('admin.dashboard.Auth.permissions.list', compact('permissions'));
     }
 
     // this method shows create permissions page
     public function create()
     {
-        return view('admin.dashboard.auth.permissions.create');
+        return view('admin.dashboard.Auth.permissions.create');
     }
 
     // this method store permissions data
@@ -87,7 +87,7 @@ class PermissionsController extends Controller implements HasMiddleware
         return redirect()->route('admin.permissions.index');
     }
 
-    return view('admin.dashboard.auth.permissions.edit', compact('permission'));
+    return view('admin.dashboard.Auth.permissions.edit', compact('permission'));
 }
 
 

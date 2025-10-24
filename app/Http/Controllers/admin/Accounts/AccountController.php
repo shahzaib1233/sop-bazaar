@@ -172,6 +172,43 @@ public static function middleware(): array
 
     }
 
+
+
+    //delete image while editing account
+    public function destroyImage($id)
+    {
+        $account_image = AccountsImageModel::find($id);
+        if (! $account_image) {
+            session()->flash('error', 'No Image Found.');
+
+            return redirect()->back();
+        }
+
+        // Delete associated images
+            $imagePath = public_path('uploads/accounts/'.$account_image->image);
+            $thumbPath = public_path('uploads/accounts/thumb/'.$account_image->image);
+
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
+            if (File::exists($thumbPath)) {
+                File::delete($thumbPath);
+            }
+
+        
+
+        if ($account_image->delete()) {
+            session()->flash('success', 'Image deleted successfully.');
+
+            return response()->json(['success' => true]);
+        } else {
+            session()->flash('error', 'Failed to delete account.');
+
+            return response()->json(['success' => false]);
+        }
+
+    }
+
     public function edit($id)
     {
         $account = AccountModel::with('images')->find($id);

@@ -82,7 +82,8 @@
                                 <label>Keywords</label>
                                 <input type="text" id="keywords" class="form-control"
                                     placeholder="Type a keyword and press Enter">
-                                <input type="hidden" id="tags" name="tags" value='{{ json_decode($account->tags) }}'>
+                                <input type="hidden" id="tags" name="tags"
+                                    value='{{ json_decode($account->tags) }}'>
                                 <div id="keywords-container" class="mt-2"></div>
                             </div>
 
@@ -100,13 +101,48 @@
                                         </div>
                                     </div>
                                     @if ($account->images)
-                                        <div class="mt-3">
+                                        <div class="mt-3 d-flex flex-wrap" id="existing-images">
                                             @foreach ($account->images as $image)
-                                                <img src="{{ asset('uploads/accounts/thumb/' . $image->image) }}"
-                                                    alt="Image" width="100" class="mr-2 mb-2">
+                                                <div class="image-tile" data-image-id="{{ $image->id }}">
+                                                    <img src="{{ asset('uploads/accounts/thumb/' . $image->image) }}"
+                                                        alt="Image">
+
+                                                    {{-- hover overlay + cross --}}
+                                                    <div class="overlay"></div>
+                                                    <button type="button" class="delete-overlay js-delete-trigger"
+                                                        title="Remove" aria-label="Remove image"
+                                                        data-id="{{ $image->id }}"
+                                                        data-url="{{ route('admin.accounts.delete.image', $image->id) }}">
+                                                        &times;
+                                                    </button>
+                                                </div>
                                             @endforeach
                                         </div>
                                     @endif
+
+                                    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+                                        aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="confirmDeleteLabel">Remove image</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this image?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary"
+                                                        data-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-danger"
+                                                        id="confirmDeleteBtn">Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -142,7 +178,7 @@
                 try {
                     let existing = JSON.parse(raw || '[]');
 
-                    
+
                     if (Array.isArray(existing)) {
                         tags = existing;
                         updateTagsUI();
@@ -200,7 +236,7 @@
 
             $form.on('submit', function(e) {
                 e.preventDefault();
-                $btn.prop('disabled', true).text('Saving…');
+                $btn.prop('disabled', true).text('Updating....');
 
                 $.ajax({
                     url: "{{ route('admin.accounts.update', $account->id) }}",
@@ -296,6 +332,46 @@
                 subSelect.empty().append('<option value="">Select Subcategory</option>');
             }
         });
+
+        //delete image while editing
+        // open modal and stash the image id + url on it
+        $(document).on('click', '.js-delete-trigger', function() {
+            const id = $(this).data('id');
+            const url = $(this).data('url');
+            $('#confirmDeleteModal').data({
+                id,
+                url
+            }).modal('show');
+        });
+
+        // confirm deletion -> AJAX DELETE -> remove tile
+        $('#confirmDeleteBtn').on('click', function() {
+            const modal = $('#confirmDeleteModal');
+            const id = modal.data('id');
+            const url = modal.data('url');
+
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function() {
+                    modal.modal('hide');
+                    $('[data-image-id="' + id + '"]').fadeOut(200, function() {
+                        $(this).remove();
+                    });
+                },
+                error: function(xhr) {
+                    // Optional: show a Bootstrap alert/toast instead
+                    alert(xhr.responseJSON?.message || 'Failed to delete image.');
+                }
+            });
+        });
+
+
+
+
 
         $(document).ready(function() {
             let currentCategoryId = "{{ $account->category_id }}";

@@ -107,6 +107,8 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/delete/{id}', [AccountController::class, 'destroy'])->name('admin.accounts.delete');
             Route::get('/edit/{id}', [AccountController::class, 'edit'])->name('admin.accounts.edit');
             Route::patch('/update/{id}', [AccountController::class, 'update'])->name('admin.accounts.update');
+            //remove image while editing account
+            Route::delete('/delete/image/{id}', [AccountController::class, 'destroyImage'])->name('admin.accounts.delete.image');
             
         });
         Route::get('/get-sub-categories/{category_id}', [HelperController::class, 'getSubCategoriesByCategoryId'])->name('admin.accounts.get-sub-categories');

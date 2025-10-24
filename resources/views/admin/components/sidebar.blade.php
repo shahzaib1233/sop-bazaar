@@ -85,84 +85,76 @@
 
 
         <nav class="mt-2">
-  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
 
-    @can('View Accounts')
-      <li class="nav-item">
-        <a href="{{ route('admin.accounts.index') }}" class="nav-link">
-          <i class="nav-icon fas fa-briefcase"></i>
-          <p>Accounts</p>
-        </a>
-      </li>
-    @endcan
+                @can('View Accounts')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.accounts.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-briefcase"></i>
+                            <p>Accounts</p>
+                        </a>
+                    </li>
+                @endcan
 
-    @can('View Categories')
-      <li class="nav-item">
-        <a href="{{ route('admin.categories.index') }}" class="nav-link">
-          <i class="nav-icon fas fa-folder"></i>
-          <p>Categories</p>
-        </a>
-      </li>
-    @endcan
+                @can('View Categories')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.categories.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-folder"></i>
+                            <p>Categories</p>
+                        </a>
+                    </li>
+                @endcan
 
-    @can('View SubCategories')
-      <li class="nav-item">
-        <a href="{{ route('admin.sub-categories.index') }}" class="nav-link">
-          <i class="nav-icon fas fa-sitemap"></i>
-          <p>Sub Categories</p>
-        </a>
-      </li>
-    @endcan
-
-
-
-      <li class="nav-item">
-        <a href="{{ route('admin.sub-categories.index') }}" class="nav-link">
-          <i class="nav-icon fas fa-sitemap"></i>
-          <p>Test Crud</p>
-        </a>
-      </li>
+                @can('View SubCategories')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.sub-categories.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-sitemap"></i>
+                            <p>Sub Categories</p>
+                        </a>
+                    </li>
+                @endcan
 
 
 
-    @can('View Status')
-      <li class="nav-item">
-        <a href="{{ route('admin.status.index') }}" class="nav-link">
-          <i class="nav-icon fas fa-chart-line"></i>
-          <p>Account Statuses</p>
-        </a>
-      </li>
-    @endcan
+                @can('View Status')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.status.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Account Statuses</p>
+                        </a>
+                    </li>
+                @endcan
 
-    @can('View Permissions')
-      <li class="nav-item">
-        <a href="{{ route('admin.permissions.index') }}" class="nav-link">
-          <i class="nav-icon fas fa-key"></i>
-          <p>Permissions</p>
-        </a>
-      </li>
-    @endcan
+                @can('View Permissions')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.permissions.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-key"></i>
+                            <p>Permissions</p>
+                        </a>
+                    </li>
+                @endcan
 
-    @can('View Roles')
-      <li class="nav-item">
-        <a href="{{ route('admin.roles.index') }}" class="nav-link">
-          <i class="nav-icon fas fa-id-badge"></i>
-          <p>Roles</p>
-        </a>
-      </li>
-    @endcan
+                @can('View Roles')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.roles.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-id-badge"></i>
+                            <p>Roles</p>
+                        </a>
+                    </li>
+                @endcan
 
-    @can('View Users')
-      <li class="nav-item">
-        <a href="{{ route('admin.users.index') }}" class="nav-link">
-          <i class="nav-icon fas fa-users"></i>
-          <p>Users</p>
-        </a>
-      </li>
-    @endcan
+                @can('View Users')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.users.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>Users</p>
+                        </a>
+                    </li>
+                @endcan
 
-  </ul>
-</nav>
+            </ul>
+        </nav>
 
 
 
